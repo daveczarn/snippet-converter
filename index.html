@@ -272,33 +272,94 @@
             font-size: 0.875rem;
             color: #1565c0;
             margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .info-text {
+            flex: 1;
+        }
+
+        .demo-btn {
+            padding: 0.5rem 1rem;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .demo-btn:hover {
+            background: #1976d2;
+            transform: translateY(-1px);
+        }
+
+        .demo-btn:active {
+            transform: translateY(0);
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+
+        button:focus,
+        input:focus,
+        textarea:focus {
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
         }
     </style>
 </head>
 <body>
-    <header>
+    <header role="banner">
         <h1>Snippet Converter</h1>
         <p class="subtitle">Convert between plain text/markdown and JSON format</p>
-        <div class="mode-indicator">
-            <span>Mode:</span>
-            <span class="mode-badge" id="modeBadge">Text → JSON</span>
-            <div class="mode-toggle">
-                <button class="mode-btn active" id="textToJsonBtn">Text → JSON</button>
-                <button class="mode-btn" id="jsonToTextBtn">JSON → Text</button>
+        <div class="mode-indicator" role="group" aria-label="Conversion mode selector">
+            <span id="modeLabel">Mode:</span>
+            <span class="mode-badge" id="modeBadge" aria-live="polite">Text → JSON</span>
+            <div class="mode-toggle" role="radiogroup" aria-labelledby="modeLabel">
+                <button class="mode-btn active" id="textToJsonBtn" role="radio" aria-checked="true" aria-label="Text to JSON mode">Text → JSON</button>
+                <button class="mode-btn" id="jsonToTextBtn" role="radio" aria-checked="false" aria-label="JSON to Text mode">JSON → Text</button>
             </div>
         </div>
     </header>
 
-    <main>
+    <main role="main">
         <div class="panel" id="leftPanel" style="width: 50%;">
             <div class="panel-header">
                 <h2 id="leftPanelTitle">Input</h2>
             </div>
             <div class="panel-content">
-                <div class="info-message" id="inputInfo">
-                    Paste your snippets here. Use <strong>---</strong> to separate multiple snippets.
+                <div class="info-message" id="inputInfo" role="note">
+                    <span class="info-text">Paste your snippets here. Use <strong>---</strong> to separate multiple snippets.</span>
+                    <button class="demo-btn" id="demoBtn" aria-label="Load sample data">Try Demo</button>
                 </div>
-                <textarea id="inputArea" placeholder="Enter your snippet(s) here..."></textarea>
+                <textarea
+                    id="inputArea"
+                    placeholder="Enter your snippet(s) here..."
+                    aria-label="Snippet input area"
+                    aria-describedby="inputInfo"
+                    spellcheck="false"></textarea>
             </div>
         </div>
 
@@ -310,42 +371,62 @@
             </div>
             <div class="panel-content">
                 <div id="metadataSection">
-                    <div class="metadata-form">
+                    <form class="metadata-form" aria-label="Snippet metadata">
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input type="text" id="title" placeholder="Snippet title (auto-generated from # heading if left blank)">
+                            <input
+                                type="text"
+                                id="title"
+                                placeholder="Snippet title (auto-generated from # heading if left blank)"
+                                aria-describedby="titleHelp">
+                            <span id="titleHelp" class="visually-hidden">Leave blank to auto-generate from markdown heading</span>
                         </div>
                         <div class="form-group">
                             <label for="language">Language</label>
-                            <input type="text" id="language" placeholder="e.g., javascript, python, markdown">
+                            <input
+                                type="text"
+                                id="language"
+                                placeholder="e.g., javascript, python, markdown"
+                                aria-describedby="languageHelp">
+                            <span id="languageHelp" class="visually-hidden">Specify the programming language</span>
                         </div>
                         <div class="form-group">
                             <label for="description">Description (optional)</label>
-                            <input type="text" id="description" placeholder="Brief description of the snippet(s)">
+                            <input
+                                type="text"
+                                id="description"
+                                placeholder="Brief description of the snippet(s)"
+                                aria-describedby="descriptionHelp">
+                            <span id="descriptionHelp" class="visually-hidden">Optional description of your snippet</span>
                         </div>
                         <div class="form-group">
                             <label for="tags">Tags (comma-separated)</label>
-                            <input type="text" id="tags" placeholder="e.g., utility, helper, api">
+                            <input
+                                type="text"
+                                id="tags"
+                                placeholder="e.g., utility, helper, api"
+                                aria-describedby="tagsHelp">
+                            <span id="tagsHelp" class="visually-hidden">Enter tags separated by commas</span>
                         </div>
-                        <div class="checkbox-group">
+                        <div class="checkbox-group" role="group" aria-label="Snippet flags">
                             <label class="checkbox-label">
-                                <input type="checkbox" id="favorite">
+                                <input type="checkbox" id="favorite" aria-label="Mark as favorite">
                                 <span>Favorite</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="pinned">
+                                <input type="checkbox" id="pinned" aria-label="Pin this snippet">
                                 <span>Pinned</span>
                             </label>
                         </div>
-                    </div>
+                    </form>
                 </div>
-                <div class="output-area" id="outputArea">
+                <div class="output-area" id="outputArea" role="region" aria-live="polite" aria-label="Conversion output">
                     <span style="color: #858585;">Output will appear here...</span>
                 </div>
             </div>
-            <div class="actions">
-                <button class="btn btn-primary" id="copyBtn">Copy to Clipboard</button>
-                <button class="btn btn-secondary" id="downloadBtn">Download JSON</button>
+            <div class="actions" role="toolbar" aria-label="Output actions">
+                <button class="btn btn-primary" id="copyBtn" aria-label="Copy output to clipboard">Copy to Clipboard</button>
+                <button class="btn btn-secondary" id="downloadBtn" aria-label="Download output as JSON file">Download JSON</button>
             </div>
         </div>
     </main>
@@ -364,11 +445,13 @@
 
         function setMode(mode) {
             currentMode = mode;
-            
+
             if (mode === 'textToJson') {
                 modeBadge.textContent = 'Text → JSON';
                 textToJsonBtn.classList.add('active');
                 jsonToTextBtn.classList.remove('active');
+                textToJsonBtn.setAttribute('aria-checked', 'true');
+                jsonToTextBtn.setAttribute('aria-checked', 'false');
                 leftPanelTitle.textContent = 'Input (Text/Markdown)';
                 rightPanelTitle.textContent = 'Metadata & JSON Output';
                 inputInfo.innerHTML = 'Paste your snippets here. Use <strong>---</strong> to separate multiple snippets.';
@@ -378,18 +461,20 @@
                 modeBadge.textContent = 'JSON → Text';
                 textToJsonBtn.classList.remove('active');
                 jsonToTextBtn.classList.add('active');
+                textToJsonBtn.setAttribute('aria-checked', 'false');
+                jsonToTextBtn.setAttribute('aria-checked', 'true');
                 leftPanelTitle.textContent = 'Input (JSON)';
                 rightPanelTitle.textContent = 'Text Preview';
                 inputInfo.innerHTML = 'Paste your JSON snippet data here.';
                 metadataSection.style.display = 'none';
                 downloadBtn.style.display = 'none';
             }
-            
+
             convert();
         }
 
         textToJsonBtn.addEventListener('click', () => setMode('textToJson'));
-        jsonToTextBtn.addEventListener('click', () => setMode('jsonToJson'));
+        jsonToTextBtn.addEventListener('click', () => setMode('jsonToText'));
 
         // Auto-detect JSON
         const inputArea = document.getElementById('inputArea');
@@ -421,6 +506,77 @@
             el.addEventListener('change', convert);
         });
 
+        // Demo button
+        const demoBtn = document.getElementById('demoBtn');
+        demoBtn.addEventListener('click', () => {
+            // Sample data demonstrating the converter's features
+            const sampleData = `# Quick Sort Algorithm
+A fast sorting algorithm that uses divide-and-conquer strategy.
+
+function quickSort(arr) {
+    if (arr.length <= 1) return arr;
+    const pivot = arr[arr.length - 1];
+    const left = arr.filter((x, i) => x <= pivot && i < arr.length - 1);
+    const right = arr.filter(x => x > pivot);
+    return [...quickSort(left), pivot, ...quickSort(right)];
+}
+
+---
+
+# Fibonacci Sequence
+Generate Fibonacci numbers using recursion with memoization.
+
+const fib = (n, memo = {}) => {
+    if (n in memo) return memo[n];
+    if (n <= 2) return 1;
+    memo[n] = fib(n - 1, memo) + fib(n - 2, memo);
+    return memo[n];
+}
+
+---
+
+# API Fetch Helper
+Reusable function for making HTTP requests with error handling.
+
+async function fetchData(url, options = {}) {
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
+        return await response.json();
+    } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+    }
+}`;
+
+            // Set sample metadata
+            inputArea.value = sampleData;
+            languageInput.value = 'javascript';
+            descriptionInput.value = 'Useful JavaScript code snippets';
+            tagsInput.value = 'javascript, algorithms, utilities, async';
+            favoriteCheckbox.checked = false;
+            pinnedCheckbox.checked = false;
+
+            // Ensure we're in text-to-json mode
+            if (currentMode !== 'textToJson') {
+                setMode('textToJson');
+            } else {
+                convert();
+            }
+
+            // Visual feedback
+            const originalText = demoBtn.textContent;
+            demoBtn.textContent = '✓ Loaded!';
+            demoBtn.style.background = '#27ae60';
+            setTimeout(() => {
+                demoBtn.textContent = originalText;
+                demoBtn.style.background = '';
+            }, 2000);
+
+            // Focus on the input area
+            inputArea.focus();
+        });
+
         // Conversion logic
         const outputArea = document.getElementById('outputArea');
 
@@ -440,88 +596,132 @@
         }
 
         function convertTextToJson(input) {
-            const snippets = input.split('---').map(s => s.trim()).filter(s => s);
-            const userTitle = titleInput.value.trim();
-            const language = languageInput.value.trim();
-            const description = descriptionInput.value.trim();
-            const tags = tagsInput.value.split(',').map(t => t.trim()).filter(t => t);
-            const favorite = favoriteCheckbox.checked;
-            const pinned = pinnedCheckbox.checked;
+            try {
+                const snippets = input.split('---').map(s => s.trim()).filter(s => s);
 
-            const result = snippets.map((content, index) => {
-                // Try to extract title from first line if it looks like a heading
-                let title = userTitle;
-                let snippetContent = content;
-                
-                if (!title) {
-                    const lines = content.split('\n');
-                    const firstLine = lines[0].trim();
-                    
-                    if (firstLine.startsWith('#')) {
-                        title = firstLine.replace(/^#+\s*/, '');
-                        snippetContent = lines.slice(1).join('\n').trim();
-                    } else if (snippets.length > 1) {
-                        title = `Snippet ${index + 1}`;
-                    }
+                if (snippets.length === 0) {
+                    outputArea.innerHTML = '<span style="color: #ff9800;">⚠ No content to convert. Please enter some text.</span>';
+                    return;
                 }
 
-                return {
-                    id: Date.now() + index,
-                    title: title,
-                    content: snippetContent,
-                    language: language,
-                    description: description,
-                    tags: tags,
-                    favorite: favorite,
-                    pinned: pinned,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-            });
+                const userTitle = titleInput.value.trim();
+                const language = languageInput.value.trim();
+                const description = descriptionInput.value.trim();
+                const tags = tagsInput.value.split(',').map(t => t.trim()).filter(t => t);
+                const favorite = favoriteCheckbox.checked;
+                const pinned = pinnedCheckbox.checked;
 
-            const json = JSON.stringify(result, null, 2);
-            outputArea.innerHTML = syntaxHighlightJson(json);
+                const result = snippets.map((content, index) => {
+                    // Try to extract title from first line if it looks like a heading
+                    let title = userTitle;
+                    let snippetContent = content;
+
+                    if (!title) {
+                        const lines = content.split('\n');
+                        const firstLine = lines[0].trim();
+
+                        if (firstLine.startsWith('#')) {
+                            title = firstLine.replace(/^#+\s*/, '');
+                            snippetContent = lines.slice(1).join('\n').trim();
+                        } else if (snippets.length > 1) {
+                            title = `Snippet ${index + 1}`;
+                        } else {
+                            title = 'Untitled Snippet';
+                        }
+                    }
+
+                    // Generate a proper unique ID
+                    const id = crypto.randomUUID ? crypto.randomUUID() : `snippet-${Date.now()}-${index}`;
+
+                    return {
+                        id: id,
+                        title: title,
+                        content: snippetContent,
+                        language: language,
+                        description: description,
+                        tags: tags,
+                        favorite: favorite,
+                        pinned: pinned,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    };
+                });
+
+                const json = JSON.stringify(result, null, 2);
+                outputArea.innerHTML = syntaxHighlightJson(json);
+            } catch (error) {
+                console.error('Error converting text to JSON:', error);
+                outputArea.innerHTML = `<span style="color: #f44336;">❌ Error: Failed to convert text to JSON. ${escapeHtml(error.message)}</span>`;
+            }
         }
 
         function convertJsonToText(input) {
             try {
+                if (!input || input.trim().length === 0) {
+                    outputArea.innerHTML = '<span style="color: #ff9800;">⚠ No JSON data to convert. Please enter valid JSON.</span>';
+                    return;
+                }
+
                 const data = JSON.parse(input);
                 const snippets = Array.isArray(data) ? data : [data];
-                
+
+                if (snippets.length === 0) {
+                    outputArea.innerHTML = '<span style="color: #ff9800;">⚠ No snippets found in JSON data.</span>';
+                    return;
+                }
+
+                // Validate that snippets have required fields
+                const invalidSnippets = snippets.filter(s => !s || typeof s !== 'object');
+                if (invalidSnippets.length > 0) {
+                    outputArea.innerHTML = '<span style="color: #f44336;">❌ Error: JSON contains invalid snippet objects.</span>';
+                    return;
+                }
+
                 const output = snippets.map((snippet, index) => {
                     let text = '';
-                    
+
                     if (snippet.title) {
                         text += `# ${snippet.title}\n\n`;
+                    } else {
+                        text += `# Snippet ${index + 1}\n\n`;
                     }
-                    
+
                     if (snippet.description) {
                         text += `${snippet.description}\n\n`;
                     }
-                    
+
                     if (snippet.language) {
                         text += `Language: ${snippet.language}\n`;
                     }
-                    
-                    if (snippet.tags && snippet.tags.length > 0) {
+
+                    if (snippet.tags && Array.isArray(snippet.tags) && snippet.tags.length > 0) {
                         text += `Tags: ${snippet.tags.join(', ')}\n`;
                     }
-                    
+
                     if (snippet.favorite || snippet.pinned) {
                         const flags = [];
                         if (snippet.favorite) flags.push('★ Favorite');
                         if (snippet.pinned) flags.push('📌 Pinned');
                         text += `${flags.join(' • ')}\n`;
                     }
-                    
-                    text += `\n---\n\n${snippet.content}`;
-                    
+
+                    text += `\n---\n\n${snippet.content || '(No content)'}`;
+
                     return text;
-                }).join('\n\n---\n\n');
-                
+                }).join('\n\n===\n\n');
+
                 outputArea.innerHTML = `<pre style="color: #d4d4d4; margin: 0; white-space: pre-wrap;">${escapeHtml(output)}</pre>`;
             } catch (e) {
-                outputArea.innerHTML = `<span style="color: #f44336;">Invalid JSON: ${e.message}</span>`;
+                console.error('Error converting JSON to text:', e);
+                let errorMessage = 'Invalid JSON format. ';
+
+                if (e instanceof SyntaxError) {
+                    errorMessage += 'Please check for syntax errors (missing commas, quotes, brackets, etc.).';
+                } else {
+                    errorMessage += escapeHtml(e.message);
+                }
+
+                outputArea.innerHTML = `<span style="color: #f44336;">❌ ${errorMessage}</span>`;
             }
         }
 
@@ -554,27 +754,71 @@
         const copyBtn = document.getElementById('copyBtn');
         copyBtn.addEventListener('click', () => {
             const text = outputArea.textContent;
+
+            if (!text || text.trim().length === 0 || text.includes('Output will appear here')) {
+                alert('⚠ Nothing to copy. Please convert some content first.');
+                return;
+            }
+
+            if (text.includes('Error:') || text.includes('Invalid')) {
+                alert('⚠ Cannot copy error messages. Please fix the errors first.');
+                return;
+            }
+
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = copyBtn.textContent;
-                copyBtn.textContent = 'Copied!';
+                copyBtn.textContent = '✓ Copied!';
+                copyBtn.style.background = '#27ae60';
                 setTimeout(() => {
                     copyBtn.textContent = originalText;
+                    copyBtn.style.background = '';
                 }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('❌ Failed to copy to clipboard. Please try again or copy manually.');
             });
         });
 
         // Download JSON
         downloadBtn.addEventListener('click', () => {
             const text = outputArea.textContent;
-            const blob = new Blob([text], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `snippets-${Date.now()}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+
+            if (!text || text.trim().length === 0 || text.includes('Output will appear here')) {
+                alert('⚠ Nothing to download. Please convert some content first.');
+                return;
+            }
+
+            if (text.includes('Error:') || text.includes('Invalid')) {
+                alert('⚠ Cannot download error messages. Please fix the errors first.');
+                return;
+            }
+
+            try {
+                // Validate JSON before downloading
+                JSON.parse(text);
+
+                const blob = new Blob([text], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `snippets-${Date.now()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                // Visual feedback
+                const originalText = downloadBtn.textContent;
+                downloadBtn.textContent = '✓ Downloaded!';
+                downloadBtn.style.background = '#27ae60';
+                setTimeout(() => {
+                    downloadBtn.textContent = originalText;
+                    downloadBtn.style.background = '';
+                }, 2000);
+            } catch (err) {
+                console.error('Download failed:', err);
+                alert('❌ Failed to download. The output is not valid JSON.');
+            }
         });
 
         // Draggable divider
@@ -604,6 +848,61 @@
         document.addEventListener('mouseup', () => {
             isDragging = false;
             document.body.style.cursor = 'default';
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const modifier = isMac ? e.metaKey : e.ctrlKey;
+
+            // Ctrl/Cmd + C: Copy to clipboard
+            if (modifier && e.key === 'c' && !e.shiftKey && document.activeElement !== inputArea) {
+                // Only trigger if not typing in input/textarea
+                if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                    copyBtn.click();
+                }
+            }
+
+            // Ctrl/Cmd + S: Download/Save
+            if (modifier && e.key === 's') {
+                e.preventDefault();
+                if (currentMode === 'textToJson' && downloadBtn.style.display !== 'none') {
+                    downloadBtn.click();
+                }
+            }
+
+            // Ctrl/Cmd + M: Toggle mode
+            if (modifier && e.key === 'm') {
+                e.preventDefault();
+                if (currentMode === 'textToJson') {
+                    setMode('jsonToText');
+                } else {
+                    setMode('textToJson');
+                }
+            }
+
+            // Ctrl/Cmd + L: Focus input area
+            if (modifier && e.key === 'l') {
+                e.preventDefault();
+                inputArea.focus();
+                inputArea.select();
+            }
+
+            // Escape: Clear focus
+            if (e.key === 'Escape') {
+                document.activeElement.blur();
+            }
+        });
+
+        // Announce keyboard shortcuts on page load (for screen readers)
+        window.addEventListener('load', () => {
+            console.log('Keyboard shortcuts available:');
+            console.log('- Ctrl/Cmd + C: Copy to clipboard');
+            console.log('- Ctrl/Cmd + S: Download JSON');
+            console.log('- Ctrl/Cmd + M: Toggle mode');
+            console.log('- Ctrl/Cmd + L: Focus input');
+            console.log('- Escape: Clear focus');
         });
     </script>
 </body>

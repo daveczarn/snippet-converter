@@ -272,36 +272,6 @@
             font-size: 0.875rem;
             color: #1565c0;
             margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .info-text {
-            flex: 1;
-        }
-
-        .demo-btn {
-            padding: 0.5rem 1rem;
-            background: #2196f3;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .demo-btn:hover {
-            background: #1976d2;
-            transform: translateY(-1px);
-        }
-
-        .demo-btn:active {
-            transform: translateY(0);
         }
 
         .visually-hidden {
@@ -328,12 +298,381 @@
             outline: 2px solid #3498db;
             outline-offset: 2px;
         }
+
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideIn 0.3s ease-out;
+            border-left: 4px solid #3498db;
+        }
+
+        .toast.success {
+            border-left-color: #27ae60;
+        }
+
+        .toast.error {
+            border-left-color: #e74c3c;
+        }
+
+        .toast.warning {
+            border-left-color: #f39c12;
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 0.875rem;
+            color: #333;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-close:hover {
+            color: #333;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast.hiding {
+            animation: slideOut 0.3s ease-in forwards;
+        }
+
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            header > div:first-child {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 0.75rem;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .subtitle {
+                font-size: 0.8125rem;
+            }
+
+            .mode-indicator {
+                flex-wrap: wrap;
+            }
+
+            .mode-toggle {
+                flex-wrap: wrap;
+            }
+
+            main {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .panel {
+                width: 100% !important;
+                height: 50vh;
+                min-height: 300px;
+            }
+
+            .divider {
+                width: 100%;
+                height: 4px;
+                cursor: row-resize;
+            }
+
+            .divider:hover {
+                background: #3498db;
+            }
+
+            .panel-header h2 {
+                font-size: 0.9rem;
+            }
+
+            .panel-content {
+                padding: 1rem;
+            }
+
+            .info-message {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 0.5rem;
+            }
+
+            .info-message button {
+                width: 100%;
+            }
+
+            .metadata-form {
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+
+            .form-group label {
+                font-size: 0.8125rem;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .actions {
+                padding: 0.75rem 1rem;
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .toast-container {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+            }
+
+            .toast {
+                min-width: auto;
+                max-width: 100%;
+            }
+        }
+
+        /* Tablet and small desktop */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .panel-content {
+                padding: 1.25rem;
+            }
+
+            textarea {
+                font-size: 0.8125rem;
+            }
+        }
+
+        /* Dark mode */
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode header {
+            background: #2d2d2d;
+            border-bottom-color: #404040;
+        }
+
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode .subtitle {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .panel {
+            background: #2d2d2d;
+        }
+
+        body.dark-mode .panel-header {
+            background: #242424;
+            border-bottom-color: #404040;
+        }
+
+        body.dark-mode textarea {
+            background: #1a1a1a;
+            border-color: #404040;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode textarea:focus {
+            border-color: #3498db;
+        }
+
+        body.dark-mode .metadata-form {
+            background: #242424;
+        }
+
+        body.dark-mode .form-group input[type="text"] {
+            background: #1a1a1a;
+            border-color: #404040;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .form-group input[type="text"]:focus {
+            border-color: #3498db;
+        }
+
+        body.dark-mode .form-group label {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .output-area {
+            background: #1a1a1a;
+        }
+
+        body.dark-mode .actions {
+            background: #242424;
+            border-top-color: #404040;
+        }
+
+        body.dark-mode .btn-secondary {
+            background: #2d2d2d;
+            color: #e0e0e0;
+            border-color: #404040;
+        }
+
+        body.dark-mode .btn-secondary:hover {
+            background: #353535;
+        }
+
+        body.dark-mode .divider {
+            background: #404040;
+        }
+
+        body.dark-mode .mode-indicator {
+            background: #242424;
+        }
+
+        body.dark-mode .mode-btn {
+            background: #2d2d2d;
+            color: #e0e0e0;
+            border-color: #404040;
+        }
+
+        body.dark-mode .mode-btn:hover {
+            background: #353535;
+        }
+
+        body.dark-mode .mode-btn.active {
+            background: #3498db;
+            color: white;
+        }
+
+        body.dark-mode .info-message {
+            background: #1e3a5f;
+            color: #6fb1ff;
+            border-left-color: #3498db;
+        }
+
+        body.dark-mode .toast {
+            background: #2d2d2d;
+            border-color: #404040;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .toast-message {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .toast-close {
+            color: #999;
+        }
+
+        body.dark-mode .toast-close:hover {
+            color: #e0e0e0;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            background: #f8f9fa;
+        }
+
+        body.dark-mode .theme-toggle {
+            border-color: #404040;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: #353535;
+        }
     </style>
 </head>
 <body>
     <header role="banner">
-        <h1>Snippet Converter</h1>
-        <p class="subtitle">Convert between plain text/markdown and JSON format</p>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>Snippet Converter</h1>
+                <p class="subtitle">Convert between plain text/markdown and JSON format</p>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeText">Dark</span>
+                </button>
+                <button class="btn btn-secondary" id="clearBtn" aria-label="Clear all inputs and reset form" style="white-space: nowrap;">Clear All</button>
+            </div>
+        </div>
         <div class="mode-indicator" role="group" aria-label="Conversion mode selector">
             <span id="modeLabel">Mode:</span>
             <span class="mode-badge" id="modeBadge" aria-live="polite">Text → JSON</span>
@@ -350,9 +689,10 @@
                 <h2 id="leftPanelTitle">Input</h2>
             </div>
             <div class="panel-content">
-                <div class="info-message" id="inputInfo" role="note">
-                    <span class="info-text">Paste your snippets here. Use <strong>---</strong> to separate multiple snippets.</span>
-                    <button class="demo-btn" id="demoBtn" aria-label="Load sample data">Try Demo</button>
+                <div class="info-message" id="inputInfo" role="note" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                    <span style="flex: 1;">Paste your snippets here. Use <strong>---</strong> to separate multiple snippets.</span>
+                    <button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Upload File</button>
+                    <input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">
                 </div>
                 <textarea
                     id="inputArea"
@@ -431,7 +771,50 @@
         </div>
     </main>
 
+    <div class="toast-container" id="toastContainer" role="region" aria-live="polite" aria-label="Notifications"></div>
+
     <script>
+        // Toast notification system
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.setAttribute('role', 'alert');
+
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || icons.info}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" aria-label="Close notification">×</button>
+            `;
+
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => removeToast(toast));
+
+            container.appendChild(toast);
+
+            // Auto-remove after duration
+            if (duration > 0) {
+                setTimeout(() => removeToast(toast), duration);
+            }
+
+            return toast;
+        }
+
+        function removeToast(toast) {
+            toast.classList.add('hiding');
+            setTimeout(() => {
+                toast.remove();
+            }, 300); // Match animation duration
+        }
+
         // Mode management
         let currentMode = 'textToJson';
         const modeBadge = document.getElementById('modeBadge');
@@ -506,76 +889,187 @@
             el.addEventListener('change', convert);
         });
 
-        // Demo button
-        const demoBtn = document.getElementById('demoBtn');
-        demoBtn.addEventListener('click', () => {
-            // Sample data demonstrating the converter's features
-            const sampleData = `# Quick Sort Algorithm
-A fast sorting algorithm that uses divide-and-conquer strategy.
+        // Clear button
+        const clearBtn = document.getElementById('clearBtn');
+        clearBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all inputs? This cannot be undone.')) {
+                inputArea.value = '';
+                titleInput.value = '';
+                languageInput.value = '';
+                descriptionInput.value = '';
+                tagsInput.value = '';
+                favoriteCheckbox.checked = false;
+                pinnedCheckbox.checked = false;
+                outputArea.innerHTML = '<span style="color: #858585;">Output will appear here...</span>';
 
-function quickSort(arr) {
-    if (arr.length <= 1) return arr;
-    const pivot = arr[arr.length - 1];
-    const left = arr.filter((x, i) => x <= pivot && i < arr.length - 1);
-    const right = arr.filter(x => x > pivot);
-    return [...quickSort(left), pivot, ...quickSort(right)];
-}
+                // Clear localStorage
+                localStorage.removeItem('snippetConverter_data');
 
----
-
-# Fibonacci Sequence
-Generate Fibonacci numbers using recursion with memoization.
-
-const fib = (n, memo = {}) => {
-    if (n in memo) return memo[n];
-    if (n <= 2) return 1;
-    memo[n] = fib(n - 1, memo) + fib(n - 2, memo);
-    return memo[n];
-}
-
----
-
-# API Fetch Helper
-Reusable function for making HTTP requests with error handling.
-
-async function fetchData(url, options = {}) {
-    try {
-        const response = await fetch(url, options);
-        if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
-        return await response.json();
-    } catch (error) {
-        console.error('Fetch error:', error);
-        throw error;
-    }
-}`;
-
-            // Set sample metadata
-            inputArea.value = sampleData;
-            languageInput.value = 'javascript';
-            descriptionInput.value = 'Useful JavaScript code snippets';
-            tagsInput.value = 'javascript, algorithms, utilities, async';
-            favoriteCheckbox.checked = false;
-            pinnedCheckbox.checked = false;
-
-            // Ensure we're in text-to-json mode
-            if (currentMode !== 'textToJson') {
-                setMode('textToJson');
-            } else {
-                convert();
+                showToast('All inputs cleared', 'success');
+                inputArea.focus();
             }
-
-            // Visual feedback
-            const originalText = demoBtn.textContent;
-            demoBtn.textContent = '✓ Loaded!';
-            demoBtn.style.background = '#27ae60';
-            setTimeout(() => {
-                demoBtn.textContent = originalText;
-                demoBtn.style.background = '';
-            }, 2000);
-
-            // Focus on the input area
-            inputArea.focus();
         });
+
+        // File upload
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const content = event.target.result;
+                    inputArea.value = content;
+
+                    // Auto-detect mode
+                    const trimmed = content.trim();
+                    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+                        try {
+                            JSON.parse(trimmed);
+                            setMode('jsonToText');
+                        } catch (e) {
+                            // Not valid JSON, stay in current mode
+                            convert();
+                        }
+                    } else {
+                        if (currentMode !== 'textToJson') {
+                            setMode('textToJson');
+                        } else {
+                            convert();
+                        }
+                    }
+
+                    // Reset file input
+                    fileInput.value = '';
+                    showToast(`File "${file.name}" loaded successfully`, 'success');
+                } catch (error) {
+                    console.error('Error reading file:', error);
+                    showToast('Failed to read file. Please try again.', 'error');
+                }
+            };
+            reader.onerror = () => {
+                console.error('Error reading file');
+                showToast('Failed to read file. Please try again.', 'error');
+            };
+            reader.readAsText(file);
+        });
+
+        // LocalStorage auto-save
+        function saveToLocalStorage() {
+            try {
+                const data = {
+                    input: inputArea.value,
+                    title: titleInput.value,
+                    language: languageInput.value,
+                    description: descriptionInput.value,
+                    tags: tagsInput.value,
+                    favorite: favoriteCheckbox.checked,
+                    pinned: pinnedCheckbox.checked,
+                    mode: currentMode
+                };
+                localStorage.setItem('snippetConverter_data', JSON.stringify(data));
+            } catch (e) {
+                console.error('Failed to save to localStorage:', e);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem('snippetConverter_data');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    inputArea.value = data.input || '';
+                    titleInput.value = data.title || '';
+                    languageInput.value = data.language || '';
+                    descriptionInput.value = data.description || '';
+                    tagsInput.value = data.tags || '';
+                    favoriteCheckbox.checked = data.favorite || false;
+                    pinnedCheckbox.checked = data.pinned || false;
+
+                    if (data.mode && data.mode !== currentMode) {
+                        setMode(data.mode);
+                    } else {
+                        convert();
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load from localStorage:', e);
+            }
+        }
+
+        // Auto-save on input
+        let saveTimeout;
+        function scheduleAutoSave() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveToLocalStorage, 1000); // Save 1 second after last change
+        }
+
+        inputArea.addEventListener('input', scheduleAutoSave);
+        titleInput.addEventListener('input', scheduleAutoSave);
+        languageInput.addEventListener('input', scheduleAutoSave);
+        descriptionInput.addEventListener('input', scheduleAutoSave);
+        tagsInput.addEventListener('input', scheduleAutoSave);
+        favoriteCheckbox.addEventListener('change', scheduleAutoSave);
+        pinnedCheckbox.addEventListener('change', scheduleAutoSave);
+
+        // Load saved data on page load
+        window.addEventListener('load', loadFromLocalStorage);
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+                themeToggle.setAttribute('aria-label', 'Switch to light mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+                themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+            }
+            localStorage.setItem('snippetConverter_theme', theme);
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Load saved theme on page load
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('snippetConverter_theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                // Check system preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme('dark');
+                }
+            }
+        });
+
+        // Listen for system theme changes
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                const savedTheme = localStorage.getItem('snippetConverter_theme');
+                if (!savedTheme) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
 
         // Conversion logic
         const outputArea = document.getElementById('outputArea');
@@ -756,12 +1250,12 @@ async function fetchData(url, options = {}) {
             const text = outputArea.textContent;
 
             if (!text || text.trim().length === 0 || text.includes('Output will appear here')) {
-                alert('⚠ Nothing to copy. Please convert some content first.');
+                showToast('Nothing to copy. Please convert some content first.', 'warning');
                 return;
             }
 
             if (text.includes('Error:') || text.includes('Invalid')) {
-                alert('⚠ Cannot copy error messages. Please fix the errors first.');
+                showToast('Cannot copy error messages. Please fix the errors first.', 'warning');
                 return;
             }
 
@@ -769,13 +1263,14 @@ async function fetchData(url, options = {}) {
                 const originalText = copyBtn.textContent;
                 copyBtn.textContent = '✓ Copied!';
                 copyBtn.style.background = '#27ae60';
+                showToast('Copied to clipboard', 'success');
                 setTimeout(() => {
                     copyBtn.textContent = originalText;
                     copyBtn.style.background = '';
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy:', err);
-                alert('❌ Failed to copy to clipboard. Please try again or copy manually.');
+                showToast('Failed to copy to clipboard. Please try again or copy manually.', 'error');
             });
         });
 
@@ -784,12 +1279,12 @@ async function fetchData(url, options = {}) {
             const text = outputArea.textContent;
 
             if (!text || text.trim().length === 0 || text.includes('Output will appear here')) {
-                alert('⚠ Nothing to download. Please convert some content first.');
+                showToast('Nothing to download. Please convert some content first.', 'warning');
                 return;
             }
 
             if (text.includes('Error:') || text.includes('Invalid')) {
-                alert('⚠ Cannot download error messages. Please fix the errors first.');
+                showToast('Cannot download error messages. Please fix the errors first.', 'warning');
                 return;
             }
 
@@ -801,7 +1296,8 @@ async function fetchData(url, options = {}) {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `snippets-${Date.now()}.json`;
+                const filename = `snippets-${Date.now()}.json`;
+                a.download = filename;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -811,13 +1307,14 @@ async function fetchData(url, options = {}) {
                 const originalText = downloadBtn.textContent;
                 downloadBtn.textContent = '✓ Downloaded!';
                 downloadBtn.style.background = '#27ae60';
+                showToast(`Downloaded ${filename}`, 'success');
                 setTimeout(() => {
                     downloadBtn.textContent = originalText;
                     downloadBtn.style.background = '';
                 }, 2000);
             } catch (err) {
                 console.error('Download failed:', err);
-                alert('❌ Failed to download. The output is not valid JSON.');
+                showToast('Failed to download. The output is not valid JSON.', 'error');
             }
         });
 

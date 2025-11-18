@@ -746,8 +746,8 @@
                         <button class="mode-btn" id="jsonToTextBtn" role="radio" aria-checked="false" aria-label="JSON to Text mode">JSON → Text</button>
                     </div>
                 </div>
-                <button class="btn btn-secondary" id="resetInputBtn" aria-label="Reset input only" style="white-space: nowrap; font-size: 0.875rem;">Reset Input</button>
-                <button class="btn btn-secondary" id="resetAllBtn" aria-label="Reset all inputs and metadata" style="white-space: nowrap; font-size: 0.875rem;">Reset All</button>
+                <button class="btn btn-secondary" id="resetInputBtn" aria-label="Reset input only" style="white-space: nowrap; font-size: 0.875rem;">↻ Reset Input</button>
+                <button class="btn btn-secondary" id="resetAllBtn" aria-label="Reset all inputs and metadata" style="white-space: nowrap; font-size: 0.875rem;">🗑️ Reset All</button>
                 <span style="font-size: 0.75rem; color: #999; font-style: italic;">Actions cannot be undone</span>
             </div>
         </div>
@@ -761,7 +761,7 @@
             <div class="panel-content">
                 <div class="info-message" id="inputInfo" role="note" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
                     <span style="flex: 1;">Paste your snippets below. Use <strong>---</strong> to separate multiple snippets.</span>
-                    <button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Upload File</button>
+                    <button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">📁 Upload File</button>
                     <input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">
                 </div>
                 <textarea
@@ -835,9 +835,9 @@
                 </div>
             </div>
             <div class="actions" role="toolbar" aria-label="Output actions">
-                <button class="btn btn-primary" id="copyBtn" aria-label="Copy output to clipboard">Copy to Clipboard</button>
+                <button class="btn btn-primary" id="copyBtn" aria-label="Copy output to clipboard">📋 Copy to Clipboard</button>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <button class="btn btn-secondary" id="downloadBtn" aria-label="Download output">Download</button>
+                    <button class="btn btn-secondary" id="downloadBtn" aria-label="Download output">💾 Download</button>
                     <select id="exportFormat" aria-label="Export format" style="padding: 0.625rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.875rem; cursor: pointer; background: white;">
                         <option value="json">JSON</option>
                         <option value="txt">Plain Text</option>

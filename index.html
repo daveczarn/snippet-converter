@@ -727,7 +727,7 @@
             </div>
             <div class="panel-content">
                 <div class="info-message" id="inputInfo" role="note" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-                    <span style="flex: 1;">Paste your snippets here. Use <strong>---</strong> to separate multiple snippets.</span>
+                    <span style="flex: 1;">Paste your snippets below. Use <strong>---</strong> to separate multiple snippets.</span>
                     <button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Upload File</button>
                     <input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">
                 </div>
@@ -872,7 +872,7 @@
                 jsonToTextBtn.setAttribute('aria-checked', 'false');
                 leftPanelTitle.textContent = 'Input (Text/Markdown)';
                 rightPanelTitle.textContent = 'Metadata & JSON Output';
-                inputInfo.innerHTML = '<span style="flex: 1;">Paste your snippets here. Use <strong>---</strong> to separate multiple snippets.</span><button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Upload File</button><input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">';
+                inputInfo.innerHTML = '<span style="flex: 1;">Paste your snippets below. Use <strong>---</strong> to separate multiple snippets.</span><button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Upload File</button><input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">';
                 metadataSection.style.display = 'block';
                 downloadBtn.style.display = 'inline-block';
 
@@ -890,7 +890,7 @@
                 jsonToTextBtn.setAttribute('aria-checked', 'true');
                 leftPanelTitle.textContent = 'Input (JSON)';
                 rightPanelTitle.textContent = 'Text Preview';
-                inputInfo.innerHTML = 'Paste your JSON snippet data here.';
+                inputInfo.innerHTML = 'Paste your JSON snippet data below.';
                 metadataSection.style.display = 'none';
                 downloadBtn.style.display = 'none';
             }

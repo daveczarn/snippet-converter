@@ -406,6 +406,24 @@
                 flex-direction: column;
                 align-items: flex-start !important;
                 gap: 0.75rem;
+                width: 100%;
+            }
+
+            header > div:first-child > div:first-child {
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+
+            #clearBtn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .theme-toggle {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
             }
 
             h1 {
@@ -632,46 +650,54 @@
         }
 
         .theme-toggle {
-            background: none;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 0.5rem 1rem;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid #e0e0e0;
+            background: #ffffff;
             cursor: pointer;
-            font-size: 0.875rem;
-            transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            transition: all 0.3s ease;
+            padding: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .theme-toggle:hover {
-            background: #f8f9fa;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
         }
 
         body.dark-mode .theme-toggle {
+            background: #2d2d2d;
             border-color: #404040;
-            color: #e0e0e0;
         }
 
-        body.dark-mode .theme-toggle:hover {
-            background: #353535;
+        .theme-toggle-icon {
+            font-size: 1.4rem;
+            line-height: 1;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
         }
     </style>
 </head>
 <body>
     <header role="banner">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <h1>Snippet Converter</h1>
-                <p class="subtitle">Convert between plain text/markdown and JSON format</p>
-            </div>
-            <div style="display: flex; gap: 0.75rem; align-items: center;">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                    <span id="themeIcon">🌙</span>
-                    <span id="themeText">Dark</span>
-                </button>
+            <div style="display: flex; align-items: center; gap: 1rem;">
                 <button class="btn btn-secondary" id="clearBtn" aria-label="Clear all inputs and reset form" style="white-space: nowrap;">Clear All</button>
+                <div>
+                    <h1>Snippet Converter</h1>
+                    <p class="subtitle">Convert between plain text/markdown and JSON format</p>
+                </div>
             </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+            </button>
         </div>
         <div class="mode-indicator" role="group" aria-label="Conversion mode selector">
             <span id="modeLabel">Mode:</span>
@@ -889,26 +915,85 @@
             el.addEventListener('change', convert);
         });
 
-        // Clear button
+        // Clear button with toast confirmation
         const clearBtn = document.getElementById('clearBtn');
-        clearBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to clear all inputs? This cannot be undone.')) {
-                inputArea.value = '';
-                titleInput.value = '';
-                languageInput.value = '';
-                descriptionInput.value = '';
-                tagsInput.value = '';
-                favoriteCheckbox.checked = false;
-                pinnedCheckbox.checked = false;
-                outputArea.innerHTML = '<span style="color: #858585;">Output will appear here...</span>';
+        let clearConfirmToast = null;
 
-                // Clear localStorage
-                localStorage.removeItem('snippetConverter_data');
+        function performClear() {
+            inputArea.value = '';
+            titleInput.value = '';
+            languageInput.value = '';
+            descriptionInput.value = '';
+            tagsInput.value = '';
+            favoriteCheckbox.checked = false;
+            pinnedCheckbox.checked = false;
+            outputArea.innerHTML = '<span style="color: #858585;">Output will appear here...</span>';
 
-                showToast('All inputs cleared', 'success');
-                inputArea.focus();
+            // Clear localStorage
+            localStorage.removeItem('snippetConverter_data');
+
+            showToast('All inputs cleared', 'success');
+            inputArea.focus();
+        }
+
+        function showClearConfirmation() {
+            // Remove any existing confirmation toast
+            if (clearConfirmToast) {
+                removeToast(clearConfirmToast);
             }
-        });
+
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast warning';
+            toast.setAttribute('role', 'alert');
+            toast.style.minWidth = '350px';
+
+            toast.innerHTML = `
+                <span class="toast-icon">⚠</span>
+                <div style="flex: 1;">
+                    <div class="toast-message" style="margin-bottom: 0.5rem;">Clear all inputs? This cannot be undone.</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="confirmClear" style="padding: 0.375rem 0.75rem; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 500;">Clear All</button>
+                        <button id="cancelClear" style="padding: 0.375rem 0.75rem; background: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 500;">Cancel</button>
+                    </div>
+                </div>
+                <button class="toast-close" aria-label="Close notification">×</button>
+            `;
+
+            const confirmBtn = toast.querySelector('#confirmClear');
+            const cancelBtn = toast.querySelector('#cancelClear');
+            const closeBtn = toast.querySelector('.toast-close');
+
+            confirmBtn.addEventListener('click', () => {
+                removeToast(toast);
+                clearConfirmToast = null;
+                performClear();
+            });
+
+            cancelBtn.addEventListener('click', () => {
+                removeToast(toast);
+                clearConfirmToast = null;
+                showToast('Clear cancelled', 'info', 2000);
+            });
+
+            closeBtn.addEventListener('click', () => {
+                removeToast(toast);
+                clearConfirmToast = null;
+            });
+
+            container.appendChild(toast);
+            clearConfirmToast = toast;
+
+            // Auto-remove after 10 seconds
+            setTimeout(() => {
+                if (clearConfirmToast === toast) {
+                    removeToast(toast);
+                    clearConfirmToast = null;
+                }
+            }, 10000);
+        }
+
+        clearBtn.addEventListener('click', showClearConfirmation);
 
         // File upload
         const uploadBtn = document.getElementById('uploadBtn');
@@ -1025,19 +1110,18 @@
         // Theme toggle
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
-        const themeText = document.getElementById('themeText');
 
         function setTheme(theme) {
             if (theme === 'dark') {
                 document.body.classList.add('dark-mode');
                 themeIcon.textContent = '☀️';
-                themeText.textContent = 'Light';
                 themeToggle.setAttribute('aria-label', 'Switch to light mode');
+                themeToggle.title = 'Switch to light mode';
             } else {
                 document.body.classList.remove('dark-mode');
                 themeIcon.textContent = '🌙';
-                themeText.textContent = 'Dark';
                 themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+                themeToggle.title = 'Switch to dark mode';
             }
             localStorage.setItem('snippetConverter_theme', theme);
         }

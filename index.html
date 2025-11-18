@@ -43,20 +43,10 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 0.75rem;
             padding: 0.5rem 1rem;
             background: #f8f9fa;
             border-radius: 6px;
             font-size: 0.875rem;
-        }
-
-        .mode-badge {
-            padding: 0.25rem 0.75rem;
-            background: #3498db;
-            color: white;
-            border-radius: 4px;
-            font-weight: 500;
-            font-size: 0.75rem;
         }
 
         .mode-toggle {
@@ -400,24 +390,26 @@
 
             header {
                 padding: 1rem;
+                padding-top: 3.5rem;
             }
 
             header > div:first-child {
-                flex-direction: column;
-                align-items: flex-start !important;
-                gap: 0.75rem;
-                width: 100%;
+                margin-bottom: 0.75rem !important;
             }
 
-            header > div:first-child > div:first-child {
-                width: 100%;
+            header > div:last-child {
                 flex-direction: column;
-                align-items: flex-start !important;
+                gap: 0.75rem;
+                align-items: stretch !important;
+            }
+
+            .mode-indicator {
+                width: 100%;
+                justify-content: center;
             }
 
             #clearBtn {
                 width: 100%;
-                margin-bottom: 0.5rem;
             }
 
             .theme-toggle {
@@ -687,25 +679,24 @@
 </head>
 <body>
     <header role="banner">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <button class="btn btn-secondary" id="clearBtn" aria-label="Clear all inputs and reset form" style="white-space: nowrap;">Clear All</button>
-                <div>
-                    <h1>Snippet Converter</h1>
-                    <p class="subtitle">Convert between plain text/markdown and JSON format</p>
-                </div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+                <h1>Snippet Converter</h1>
+                <p class="subtitle">Convert between plain text/markdown and JSON format</p>
             </div>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
                 <span class="theme-toggle-icon" id="themeIcon">🌙</span>
             </button>
         </div>
-        <div class="mode-indicator" role="group" aria-label="Conversion mode selector">
-            <span id="modeLabel">Mode:</span>
-            <span class="mode-badge" id="modeBadge" aria-live="polite">Text → JSON</span>
-            <div class="mode-toggle" role="radiogroup" aria-labelledby="modeLabel">
-                <button class="mode-btn active" id="textToJsonBtn" role="radio" aria-checked="true" aria-label="Text to JSON mode">Text → JSON</button>
-                <button class="mode-btn" id="jsonToTextBtn" role="radio" aria-checked="false" aria-label="JSON to Text mode">JSON → Text</button>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="mode-indicator" role="group" aria-label="Conversion mode selector" style="margin: 0;">
+                <span id="modeLabel">Mode:</span>
+                <div class="mode-toggle" role="radiogroup" aria-labelledby="modeLabel">
+                    <button class="mode-btn active" id="textToJsonBtn" role="radio" aria-checked="true" aria-label="Text to JSON mode">Text → JSON</button>
+                    <button class="mode-btn" id="jsonToTextBtn" role="radio" aria-checked="false" aria-label="JSON to Text mode">JSON → Text</button>
+                </div>
             </div>
+            <button class="btn btn-secondary" id="clearBtn" aria-label="Clear all inputs and reset form" style="white-space: nowrap;">Clear All</button>
         </div>
     </header>
 
@@ -843,7 +834,6 @@
 
         // Mode management
         let currentMode = 'textToJson';
-        const modeBadge = document.getElementById('modeBadge');
         const textToJsonBtn = document.getElementById('textToJsonBtn');
         const jsonToTextBtn = document.getElementById('jsonToTextBtn');
         const leftPanelTitle = document.getElementById('leftPanelTitle');
@@ -856,18 +846,24 @@
             currentMode = mode;
 
             if (mode === 'textToJson') {
-                modeBadge.textContent = 'Text → JSON';
                 textToJsonBtn.classList.add('active');
                 jsonToTextBtn.classList.remove('active');
                 textToJsonBtn.setAttribute('aria-checked', 'true');
                 jsonToTextBtn.setAttribute('aria-checked', 'false');
                 leftPanelTitle.textContent = 'Input (Text/Markdown)';
                 rightPanelTitle.textContent = 'Metadata & JSON Output';
-                inputInfo.innerHTML = 'Paste your snippets here. Use <strong>---</strong> to separate multiple snippets.';
+                inputInfo.innerHTML = '<span style="flex: 1;">Paste your snippets here. Use <strong>---</strong> to separate multiple snippets.</span><button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Upload File</button><input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">';
                 metadataSection.style.display = 'block';
                 downloadBtn.style.display = 'inline-block';
+
+                // Re-attach upload button listeners after re-creating the button
+                const newUploadBtn = document.getElementById('uploadBtn');
+                const newFileInput = document.getElementById('fileInput');
+                if (newUploadBtn) {
+                    newUploadBtn.addEventListener('click', () => newFileInput.click());
+                    newFileInput.addEventListener('change', handleFileUpload);
+                }
             } else {
-                modeBadge.textContent = 'JSON → Text';
                 textToJsonBtn.classList.remove('active');
                 jsonToTextBtn.classList.add('active');
                 textToJsonBtn.setAttribute('aria-checked', 'false');
@@ -995,15 +991,8 @@
 
         clearBtn.addEventListener('click', showClearConfirmation);
 
-        // File upload
-        const uploadBtn = document.getElementById('uploadBtn');
-        const fileInput = document.getElementById('fileInput');
-
-        uploadBtn.addEventListener('click', () => {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', (e) => {
+        // File upload handler
+        function handleFileUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
 
@@ -1032,7 +1021,7 @@
                     }
 
                     // Reset file input
-                    fileInput.value = '';
+                    e.target.value = '';
                     showToast(`File "${file.name}" loaded successfully`, 'success');
                 } catch (error) {
                     console.error('Error reading file:', error);
@@ -1044,7 +1033,18 @@
                 showToast('Failed to read file. Please try again.', 'error');
             };
             reader.readAsText(file);
-        });
+        }
+
+        // File upload - Initial setup
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileInput = document.getElementById('fileInput');
+
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            fileInput.addEventListener('change', handleFileUpload);
+        }
 
         // LocalStorage auto-save
         function saveToLocalStorage() {

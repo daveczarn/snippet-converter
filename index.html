@@ -403,13 +403,13 @@
                 align-items: stretch !important;
             }
 
-            header > div:last-child > div:first-child {
+            header > div:last-child > div {
                 flex-direction: column;
                 gap: 0.75rem;
                 align-items: stretch !important;
             }
 
-            header > div:last-child > span {
+            header > div:last-child span[style*="italic"] {
                 text-align: center;
                 font-size: 0.7rem;
             }
@@ -704,7 +704,7 @@
                 <span class="theme-toggle-icon" id="themeIcon">🌙</span>
             </button>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+        <div style="display: flex; justify-content: flex-start; align-items: center; gap: 1rem;">
             <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                 <div class="mode-indicator" role="group" aria-label="Conversion mode selector" style="margin: 0;">
                     <span id="modeLabel">Mode:</span>
@@ -715,8 +715,8 @@
                 </div>
                 <button class="btn btn-secondary" id="resetInputBtn" aria-label="Reset input only" style="white-space: nowrap; font-size: 0.875rem;">Reset Input</button>
                 <button class="btn btn-secondary" id="resetAllBtn" aria-label="Reset all inputs and metadata" style="white-space: nowrap; font-size: 0.875rem;">Reset All</button>
+                <span style="font-size: 0.75rem; color: #999; font-style: italic;">Actions cannot be undone</span>
             </div>
-            <span style="font-size: 0.75rem; color: #999; font-style: italic;">Actions cannot be undone</span>
         </div>
     </header>
 

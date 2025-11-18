@@ -115,10 +115,23 @@
             font-size: 0.875rem;
             resize: none;
             line-height: 1.6;
+            transition: all 0.2s ease;
         }
 
         textarea:focus {
             outline: none;
+            border-color: #3498db;
+        }
+
+        textarea.drag-over {
+            border-color: #3498db;
+            border-width: 2px;
+            background: #f0f8ff;
+            border-style: dashed;
+        }
+
+        body.dark-mode textarea.drag-over {
+            background: #1e3a5f;
             border-color: #3498db;
         }
 
@@ -505,9 +518,18 @@
                 flex-direction: column;
             }
 
+            .actions > div {
+                flex-direction: column;
+                width: 100%;
+            }
+
             .btn {
                 width: 100%;
                 justify-content: center;
+            }
+
+            #exportFormat {
+                width: 100%;
             }
 
             .toast-container {
@@ -657,6 +679,17 @@
             color: #666 !important;
         }
 
+        body.dark-mode select {
+            background: #2d2d2d;
+            color: #e0e0e0;
+            border-color: #404040;
+        }
+
+        body.dark-mode select option {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
         .theme-toggle {
             width: 42px;
             height: 42px;
@@ -803,7 +836,15 @@
             </div>
             <div class="actions" role="toolbar" aria-label="Output actions">
                 <button class="btn btn-primary" id="copyBtn" aria-label="Copy output to clipboard">Copy to Clipboard</button>
-                <button class="btn btn-secondary" id="downloadBtn" aria-label="Download output as JSON file">Download JSON</button>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <button class="btn btn-secondary" id="downloadBtn" aria-label="Download output">Download</button>
+                    <select id="exportFormat" aria-label="Export format" style="padding: 0.625rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.875rem; cursor: pointer; background: white;">
+                        <option value="json">JSON</option>
+                        <option value="txt">Plain Text</option>
+                        <option value="md">Markdown</option>
+                        <option value="csv">CSV</option>
+                    </select>
+                </div>
             </div>
         </div>
     </main>
@@ -1019,6 +1060,86 @@
             });
             fileInput.addEventListener('change', handleFileUpload);
         }
+
+        // Drag and drop file upload
+        inputArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            inputArea.classList.add('drag-over');
+        });
+
+        inputArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            inputArea.classList.remove('drag-over');
+        });
+
+        inputArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            inputArea.classList.remove('drag-over');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+
+                // Check file type
+                const validExtensions = ['.txt', '.md', '.json'];
+                const fileName = file.name.toLowerCase();
+                const isValid = validExtensions.some(ext => fileName.endsWith(ext));
+
+                if (!isValid) {
+                    showToast('Invalid file type. Please upload .txt, .md, or .json files.', 'error');
+                    return;
+                }
+
+                // Read the file
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const content = event.target.result;
+                        inputArea.value = content;
+
+                        // Auto-detect mode
+                        const trimmed = content.trim();
+                        if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+                            try {
+                                JSON.parse(trimmed);
+                                setMode('jsonToText');
+                            } catch (e) {
+                                // Not valid JSON, stay in current mode
+                                convert();
+                            }
+                        } else {
+                            if (currentMode !== 'textToJson') {
+                                setMode('textToJson');
+                            } else {
+                                convert();
+                            }
+                        }
+
+                        showToast(`File "${file.name}" loaded successfully`, 'success');
+                    } catch (error) {
+                        console.error('Error reading file:', error);
+                        showToast('Failed to read file. Please try again.', 'error');
+                    }
+                };
+                reader.onerror = () => {
+                    console.error('Error reading file');
+                    showToast('Failed to read file. Please try again.', 'error');
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Prevent default drag and drop behavior on the whole document
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+        });
 
         // LocalStorage auto-save
         function saveToLocalStorage() {
@@ -1332,7 +1453,114 @@
             });
         });
 
-        // Download JSON
+        // Export format functions
+        const exportFormat = document.getElementById('exportFormat');
+
+        function exportToJSON() {
+            const text = outputArea.textContent;
+            try {
+                JSON.parse(text);
+                return { content: text, mimeType: 'application/json', extension: 'json' };
+            } catch (err) {
+                throw new Error('The output is not valid JSON.');
+            }
+        }
+
+        function exportToPlainText() {
+            const text = outputArea.textContent;
+            try {
+                const data = JSON.parse(text);
+                const snippets = Array.isArray(data) ? data : [data];
+
+                const plainText = snippets.map((snippet, index) => {
+                    let output = '';
+                    output += `TITLE: ${snippet.title || `Snippet ${index + 1}`}\n`;
+                    if (snippet.language) output += `LANGUAGE: ${snippet.language}\n`;
+                    if (snippet.description) output += `DESCRIPTION: ${snippet.description}\n`;
+                    if (snippet.tags && snippet.tags.length > 0) output += `TAGS: ${snippet.tags.join(', ')}\n`;
+                    if (snippet.favorite) output += `FAVORITE: Yes\n`;
+                    if (snippet.pinned) output += `PINNED: Yes\n`;
+                    output += `\nCONTENT:\n${snippet.content || '(No content)'}\n`;
+                    return output;
+                }).join('\n' + '='.repeat(80) + '\n\n');
+
+                return { content: plainText, mimeType: 'text/plain', extension: 'txt' };
+            } catch (err) {
+                throw new Error('Failed to export to plain text.');
+            }
+        }
+
+        function exportToMarkdown() {
+            const text = outputArea.textContent;
+            try {
+                const data = JSON.parse(text);
+                const snippets = Array.isArray(data) ? data : [data];
+
+                const markdown = snippets.map((snippet, index) => {
+                    let output = '';
+                    output += `# ${snippet.title || `Snippet ${index + 1}`}\n\n`;
+                    if (snippet.description) output += `> ${snippet.description}\n\n`;
+                    if (snippet.language) output += `**Language:** ${snippet.language}  \n`;
+                    if (snippet.tags && snippet.tags.length > 0) {
+                        output += `**Tags:** ${snippet.tags.map(tag => `\`${tag}\``).join(', ')}  \n`;
+                    }
+                    if (snippet.favorite || snippet.pinned) {
+                        const flags = [];
+                        if (snippet.favorite) flags.push('⭐ Favorite');
+                        if (snippet.pinned) flags.push('📌 Pinned');
+                        output += `**Flags:** ${flags.join(', ')}  \n`;
+                    }
+                    output += `\n\`\`\`${snippet.language || ''}\n${snippet.content || '(No content)'}\n\`\`\`\n`;
+                    return output;
+                }).join('\n---\n\n');
+
+                return { content: markdown, mimeType: 'text/markdown', extension: 'md' };
+            } catch (err) {
+                throw new Error('Failed to export to Markdown.');
+            }
+        }
+
+        function exportToCSV() {
+            const text = outputArea.textContent;
+            try {
+                const data = JSON.parse(text);
+                const snippets = Array.isArray(data) ? data : [data];
+
+                // CSV header
+                let csv = 'ID,Title,Language,Description,Tags,Favorite,Pinned,Content,Created At,Updated At\n';
+
+                // CSV rows
+                csv += snippets.map(snippet => {
+                    const escapeCSV = (str) => {
+                        if (str === null || str === undefined) return '';
+                        str = String(str);
+                        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                            return `"${str.replace(/"/g, '""')}"`;
+                        }
+                        return str;
+                    };
+
+                    return [
+                        escapeCSV(snippet.id || ''),
+                        escapeCSV(snippet.title || ''),
+                        escapeCSV(snippet.language || ''),
+                        escapeCSV(snippet.description || ''),
+                        escapeCSV(Array.isArray(snippet.tags) ? snippet.tags.join('; ') : ''),
+                        escapeCSV(snippet.favorite ? 'Yes' : 'No'),
+                        escapeCSV(snippet.pinned ? 'Yes' : 'No'),
+                        escapeCSV(snippet.content || ''),
+                        escapeCSV(snippet.createdAt || ''),
+                        escapeCSV(snippet.updatedAt || '')
+                    ].join(',');
+                }).join('\n');
+
+                return { content: csv, mimeType: 'text/csv', extension: 'csv' };
+            } catch (err) {
+                throw new Error('Failed to export to CSV.');
+            }
+        }
+
+        // Download with format selection
         downloadBtn.addEventListener('click', () => {
             const text = outputArea.textContent;
 
@@ -1347,14 +1575,31 @@
             }
 
             try {
-                // Validate JSON before downloading
-                JSON.parse(text);
+                const format = exportFormat.value;
+                let exportData;
 
-                const blob = new Blob([text], { type: 'application/json' });
+                switch (format) {
+                    case 'json':
+                        exportData = exportToJSON();
+                        break;
+                    case 'txt':
+                        exportData = exportToPlainText();
+                        break;
+                    case 'md':
+                        exportData = exportToMarkdown();
+                        break;
+                    case 'csv':
+                        exportData = exportToCSV();
+                        break;
+                    default:
+                        exportData = exportToJSON();
+                }
+
+                const blob = new Blob([exportData.content], { type: exportData.mimeType });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                const filename = `snippets-${Date.now()}.json`;
+                const filename = `snippets-${Date.now()}.${exportData.extension}`;
                 a.download = filename;
                 document.body.appendChild(a);
                 a.click();
@@ -1372,7 +1617,7 @@
                 }, 2000);
             } catch (err) {
                 console.error('Download failed:', err);
-                showToast('Failed to download. The output is not valid JSON.', 'error');
+                showToast(err.message || 'Failed to download file.', 'error');
             }
         });
 

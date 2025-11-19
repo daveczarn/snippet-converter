@@ -157,14 +157,17 @@
             color: #555;
         }
 
-        .form-group input[type="text"] {
+        .form-group input[type="text"],
+        .form-group select {
             padding: 0.5rem;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 0.875rem;
+            width: 100%;
         }
 
-        .form-group input[type="text"]:focus {
+        .form-group input[type="text"]:focus,
+        .form-group select:focus {
             outline: none;
             border-color: #3498db;
         }
@@ -595,13 +598,15 @@
             background: #242424;
         }
 
-        body.dark-mode .form-group input[type="text"] {
+        body.dark-mode .form-group input[type="text"],
+        body.dark-mode .form-group select {
             background: #1a1a1a;
             border-color: #404040;
             color: #e0e0e0;
         }
 
-        body.dark-mode .form-group input[type="text"]:focus {
+        body.dark-mode .form-group input[type="text"]:focus,
+        body.dark-mode .form-group select:focus {
             border-color: #3498db;
         }
 
@@ -677,6 +682,11 @@
 
         body.dark-mode header span[style*="color: #999"] {
             color: #666 !important;
+        }
+
+        select {
+            background: white;
+            color: #333;
         }
 
         body.dark-mode select {
@@ -760,13 +770,13 @@
             </div>
             <div class="panel-content">
                 <div class="info-message" id="inputInfo" role="note" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-                    <span style="flex: 1;">Paste your snippets below. Use <strong>---</strong> to separate multiple snippets.</span>
+                    <span style="flex: 1;">Paste your snippet below.</span>
                     <button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">📁 Upload File</button>
                     <input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">
                 </div>
                 <textarea
                     id="inputArea"
-                    placeholder="Enter your snippet(s) here..."
+                    placeholder="Enter your snippet here..."
                     aria-label="Snippet input area"
                     aria-describedby="inputInfo"
                     spellcheck="false"></textarea>
@@ -792,22 +802,39 @@
                             <span id="titleHelp" class="visually-hidden">Leave blank to auto-generate from markdown heading</span>
                         </div>
                         <div class="form-group">
-                            <label for="language">Language</label>
-                            <input
-                                type="text"
-                                id="language"
-                                placeholder="e.g., javascript, python, markdown"
-                                aria-describedby="languageHelp">
-                            <span id="languageHelp" class="visually-hidden">Specify the programming language</span>
-                        </div>
-                        <div class="form-group">
                             <label for="description">Description (optional)</label>
                             <input
                                 type="text"
                                 id="description"
-                                placeholder="Brief description of the snippet(s)"
+                                placeholder="Brief description of the snippet"
                                 aria-describedby="descriptionHelp">
                             <span id="descriptionHelp" class="visually-hidden">Optional description of your snippet</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="language">Language</label>
+                            <select
+                                id="language"
+                                aria-describedby="languageHelp">
+                                <option value="">Select language...</option>
+                                <option value="bash">Bash</option>
+                                <option value="csharp">C#</option>
+                                <option value="cpp">C++</option>
+                                <option value="css">CSS</option>
+                                <option value="go">Go</option>
+                                <option value="html">HTML</option>
+                                <option value="java">Java</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="json">JSON</option>
+                                <option value="markdown">Markdown</option>
+                                <option value="php">PHP</option>
+                                <option value="plaintext">Plain text</option>
+                                <option value="python">Python</option>
+                                <option value="ruby">Ruby</option>
+                                <option value="rust">Rust</option>
+                                <option value="sql">SQL</option>
+                                <option value="typescript">TypeScript</option>
+                            </select>
+                            <span id="languageHelp" class="visually-hidden">Specify the programming language</span>
                         </div>
                         <div class="form-group">
                             <label for="tags">Tags (comma-separated)</label>
@@ -838,7 +865,7 @@
                 <button class="btn btn-primary" id="copyBtn" aria-label="Copy output to clipboard">📋 Copy to Clipboard</button>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
                     <button class="btn btn-secondary" id="downloadBtn" aria-label="Download output">💾 Download</button>
-                    <select id="exportFormat" aria-label="Export format" style="padding: 0.625rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.875rem; cursor: pointer; background: white;">
+                    <select id="exportFormat" aria-label="Export format" style="padding: 0.625rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.875rem; cursor: pointer;">
                         <option value="json">JSON</option>
                         <option value="txt">Plain Text</option>
                         <option value="md">Markdown</option>
@@ -913,7 +940,7 @@
                 jsonToTextBtn.setAttribute('aria-checked', 'false');
                 leftPanelTitle.textContent = 'Input (Text/Markdown)';
                 rightPanelTitle.textContent = 'Metadata & JSON Output';
-                inputInfo.innerHTML = '<span style="flex: 1;">Paste your snippets below. Use <strong>---</strong> to separate multiple snippets.</span><button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Upload File</button><input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">';
+                inputInfo.innerHTML = '<span style="flex: 1;">Paste your snippet below.</span><button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">📁 Upload File</button><input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">';
                 metadataSection.style.display = 'block';
                 downloadBtn.style.display = 'inline-block';
 
@@ -1293,55 +1320,49 @@
                     // Not valid JSON, continue with normal text-to-JSON conversion
                 }
 
-                const snippets = input.split('---').map(s => s.trim()).filter(s => s);
-
-                if (snippets.length === 0) {
+                if (!input || input.trim().length === 0) {
                     outputArea.innerHTML = '<span style="color: #ff9800;">⚠ No content to convert. Please enter some text.</span>';
                     return;
                 }
 
                 const userTitle = titleInput.value.trim();
-                const language = languageInput.value.trim();
+                const language = languageInput.value;
                 const description = descriptionInput.value.trim();
                 const tags = tagsInput.value.split(',').map(t => t.trim()).filter(t => t);
                 const favorite = favoriteCheckbox.checked;
                 const pinned = pinnedCheckbox.checked;
 
-                const result = snippets.map((content, index) => {
-                    // Try to extract title from first line if it looks like a heading
-                    let title = userTitle;
-                    let snippetContent = content;
+                // Try to extract title from first line if it looks like a heading
+                let title = userTitle;
+                let snippetContent = input;
 
-                    if (!title) {
-                        const lines = content.split('\n');
-                        const firstLine = lines[0].trim();
+                if (!title) {
+                    const lines = input.split('\n');
+                    const firstLine = lines[0].trim();
 
-                        if (firstLine.startsWith('#')) {
-                            title = firstLine.replace(/^#+\s*/, '');
-                            snippetContent = lines.slice(1).join('\n').trim();
-                        } else if (snippets.length > 1) {
-                            title = `Snippet ${index + 1}`;
-                        } else {
-                            title = 'Untitled Snippet';
-                        }
+                    if (firstLine.startsWith('#')) {
+                        title = firstLine.replace(/^#+\s*/, '');
+                        snippetContent = lines.slice(1).join('\n').trim();
+                    } else {
+                        title = 'Untitled Snippet';
                     }
+                }
 
-                    // Generate a proper unique ID
-                    const id = crypto.randomUUID ? crypto.randomUUID() : `snippet-${Date.now()}-${index}`;
+                // Generate a proper unique ID
+                const id = crypto.randomUUID ? crypto.randomUUID() : `snippet-${Date.now()}`;
 
-                    return {
-                        id: id,
-                        title: title,
-                        content: snippetContent,
-                        language: language,
-                        description: description,
-                        tags: tags,
-                        favorite: favorite,
-                        pinned: pinned,
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    };
-                });
+                const result = {
+                    id: id,
+                    title: title,
+                    content: snippetContent,
+                    language: language,
+                    description: description,
+                    tags: tags,
+                    favorite: favorite,
+                    pinned: pinned,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
 
                 const json = JSON.stringify(result, null, 2);
                 outputArea.innerHTML = syntaxHighlightJson(json);
@@ -1362,7 +1383,7 @@
                 const snippets = Array.isArray(data) ? data : [data];
 
                 if (snippets.length === 0) {
-                    outputArea.innerHTML = '<span style="color: #ff9800;">⚠ No snippets found in JSON data.</span>';
+                    outputArea.innerHTML = '<span style="color: #ff9800;">⚠ No snippet found in JSON data.</span>';
                     return;
                 }
 
@@ -1379,7 +1400,7 @@
                     if (snippet.title) {
                         text += `# ${snippet.title}\n\n`;
                     } else {
-                        text += `# Snippet ${index + 1}\n\n`;
+                        text += `# Untitled Snippet\n\n`;
                     }
 
                     if (snippet.description) {

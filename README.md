@@ -2,7 +2,7 @@
 
 A powerful, accessible web application for converting between plain text/markdown snippets and JSON format for snippet management systems.
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Accessibility](https://img.shields.io/badge/a11y-WCAG%202.1-brightgreen.svg)
 
@@ -15,6 +15,24 @@ A powerful, accessible web application for converting between plain text/markdow
 - **Smart Title Extraction**: Auto-extracts titles from markdown headings (`#` syntax)
 - **Unique IDs**: Generates proper UUIDs for each snippet using crypto.randomUUID()
 
+### File Upload & Import
+- **Drag & Drop**: Drag files directly onto the input area with visual feedback
+- **Upload Button**: Click to browse and upload .txt, .md, or .json files
+- **File Validation**: Automatic file type checking with helpful error messages
+- **Auto-Mode Detection**: Automatically switches to the correct mode based on file content
+
+### Export Options
+- **Multiple Formats**: Export in JSON, Plain Text, Markdown, or CSV
+- **Copy to Clipboard**: One-click copy with visual feedback and toast notifications
+- **Download Files**: Save snippets with timestamped filenames
+- **Format Selector**: Choose your preferred export format from dropdown
+
+### Export Format Details
+- **JSON**: Standard structured format, perfect for APIs and data interchange
+- **Plain Text**: Readable format with headers (TITLE, LANGUAGE, DESCRIPTION, etc.)
+- **Markdown**: Beautiful formatted output with code blocks and syntax highlighting
+- **CSV**: Spreadsheet-compatible format for Excel, Google Sheets, etc.
+
 ### Metadata Management
 - **Language**: Specify programming language for syntax highlighting
 - **Description**: Add contextual information about your snippets
@@ -25,21 +43,28 @@ A powerful, accessible web application for converting between plain text/markdow
 ### User Interface
 - **Split-view Design**: Resizable panels with draggable divider
 - **Syntax Highlighting**: Beautiful JSON output with color-coded tokens
-- **Dark Theme Output**: Easy-on-the-eyes code display
-- **Interactive Demo**: Try it instantly with the "Try Demo" button
+- **Dark Mode**: Full dark theme with system preference detection
+- **Theme Toggle**: macOS-style circular button (🌙/☀️)
 - **Real-time Conversion**: See results as you type
+- **Toast Notifications**: Modern, non-intrusive notifications for all actions
+- **Responsive Design**: Fully optimized for mobile, tablet, and desktop
 
-### Export & Copy
-- **Copy to Clipboard**: One-click copy with visual feedback
-- **Download JSON**: Save snippets with timestamped filenames
-- **Validation**: Prevents copying/downloading invalid or error content
+### Reset Controls
+- **Reset Input**: Clear only the input text (preserves metadata)
+- **Reset All**: Clear everything including input and all metadata
+- **Instant Action**: No confirmation needed - actions shown with warning text
+
+### Data Persistence
+- **LocalStorage Auto-save**: Automatically saves your work every second
+- **Session Restore**: Returns to your last state when you reopen the app
+- **Theme Persistence**: Remembers your light/dark mode preference
 
 ### Accessibility ♿
 - **WCAG 2.1 Compliant**: Full keyboard navigation support
 - **ARIA Labels**: Comprehensive screen reader support
 - **Keyboard Shortcuts**:
   - `Ctrl/Cmd + C`: Copy to clipboard
-  - `Ctrl/Cmd + S`: Download JSON
+  - `Ctrl/Cmd + S`: Download file
   - `Ctrl/Cmd + M`: Toggle mode
   - `Ctrl/Cmd + L`: Focus input area
   - `Escape`: Clear focus
@@ -55,7 +80,7 @@ A powerful, accessible web application for converting between plain text/markdow
 ## 🚀 Quick Start
 
 ### Try it Online
-**Live Demo**: [https://YOUR-USERNAME.github.io/snippet-converter](https://YOUR-USERNAME.github.io/snippet-converter)
+**Live Demo**: [https://daveczarn.github.io/snippet-converter](https://daveczarn.github.io/snippet-converter)
 
 ### Local Development
 No installation required! Just open the file:
@@ -71,7 +96,8 @@ python -m http.server 8000
 ### Text to JSON Mode
 
 1. **Input Your Snippets**
-   - Click "Try Demo" for sample data or paste your own
+   - Paste text directly or drag & drop a file
+   - Click "Upload File" to browse for files
    - Use `---` to separate multiple snippets
    - Start lines with `#` for automatic title extraction
 
@@ -83,13 +109,14 @@ python -m http.server 8000
    - Check favorite/pinned as needed
 
 3. **Export**
+   - Select format: JSON, Plain Text, Markdown, or CSV
    - Click "Copy to Clipboard" or use `Ctrl/Cmd + C`
-   - Click "Download JSON" or use `Ctrl/Cmd + S`
+   - Click "Download" or use `Ctrl/Cmd + S`
 
 ### JSON to Text Mode
 
 1. **Paste JSON Data**
-   - Paste valid JSON snippet data in the left panel
+   - Paste valid JSON snippet data or drag & drop a .json file
    - Supports both single objects and arrays
    - Auto-switches to JSON mode when detected
 
@@ -97,6 +124,30 @@ python -m http.server 8000
    - See formatted text output with metadata
    - All snippet properties are displayed
    - Ready to copy or use elsewhere
+
+### File Upload Methods
+
+**Drag & Drop**:
+- Drag any .txt, .md, or .json file onto the input textarea
+- Visual feedback with dashed blue border
+- Automatic file type detection and mode switching
+
+**Upload Button**:
+- Click "Upload File" in the info bar
+- Browse and select your file
+- Supports .txt, .md, and .json formats
+
+### Reset Controls
+
+**Reset Input**:
+- Clears only the input textarea
+- Preserves all metadata fields
+- Useful for trying different snippets with same metadata
+
+**Reset All**:
+- Clears input and all metadata fields
+- Removes data from localStorage
+- Fresh start for new snippets
 
 ## 💡 Examples
 
@@ -146,16 +197,19 @@ function quickSort(arr) {
 - XSS Protection: All user input is properly escaped
 - No external requests: Runs entirely client-side
 - No data collection: Complete privacy
+- File type validation: Only accepts safe file formats
 
 ### Performance
-- Fast load time: Single 50KB HTML file
+- Fast load time: Single ~80KB HTML file
 - No build process: Direct browser execution
 - Instant conversion: Real-time processing
+- Efficient localStorage: Debounced auto-save (1 second)
 
 ### Browser Compatibility
 - Requires modern browser with ES6 support
 - Uses `crypto.randomUUID()` with fallback
 - Clipboard API with error handling
+- Drag & Drop API for file uploads
 
 ## 🤝 Contributing
 
@@ -176,13 +230,35 @@ Contributions are welcome! Here's how you can help:
 
 ## 📝 Changelog
 
+### Version 2.0.0 (2025-11-18)
+**Major Features:**
+- ✨ Drag & drop file upload with visual feedback
+- 📤 Multiple export formats (JSON, Plain Text, Markdown, CSV)
+- 🔄 Split reset controls (Reset Input vs Reset All)
+- 🔔 Toast notification system (replaced all alerts)
+- 🌙 macOS-style circular theme toggle
+- 💾 LocalStorage auto-save
+- 📱 Fully responsive mobile design
+
+**UI Improvements:**
+- 🎨 Redesigned header layout
+- 🔘 Icon-based theme toggle
+- ⚠️ Removed confirmation dialogs for faster workflow
+- ✨ Better visual feedback on all actions
+- 🎯 Improved button placement and grouping
+
+**Technical:**
+- Better UUID generation (crypto.randomUUID)
+- Comprehensive error handling
+- Input validation improvements
+- Dark mode enhancements
+
 ### Version 1.1.0 (2025-11-18)
 - ✅ Fixed mode toggle bug
 - ✅ Added comprehensive error handling
 - ✅ Improved input validation
 - ✅ Full accessibility support (ARIA, keyboard navigation)
 - ✅ Added keyboard shortcuts
-- ✅ Implemented demo button with sample data
 - ✅ Better UUID generation (crypto.randomUUID)
 - ✅ Visual feedback for all actions
 - ✅ Removed duplicate files
@@ -202,6 +278,7 @@ MIT License - see LICENSE file for details
 - Built with accessibility in mind
 - Inspired by the need for simple snippet management
 - No dependencies = no vulnerabilities
+- Modern UX patterns for better user experience
 
 ## 📧 Support
 

@@ -773,7 +773,7 @@
                     <span style="flex: 1;">Paste your snippet below.</span>
                     <button class="btn btn-secondary" id="pasteBtn" aria-label="Paste from clipboard" style="font-size: 0.75rem; padding: 0.5rem 1rem;">📋 Paste</button>
                     <button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">📁 Upload File</button>
-                    <input type="file" id="fileInput" accept=".txt,.md,.json,.yml,.yaml,.xml" style="display: none;" aria-label="File input">
+                    <input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">
                 </div>
                 <textarea
                     id="inputArea"
@@ -941,7 +941,7 @@
                 jsonToTextBtn.setAttribute('aria-checked', 'false');
                 leftPanelTitle.textContent = 'Input (Text/Markdown)';
                 rightPanelTitle.textContent = 'Metadata & JSON Output';
-                inputInfo.innerHTML = '<span style="flex: 1;">Paste your snippet below.</span><button class="btn btn-secondary" id="pasteBtn" aria-label="Paste from clipboard" style="font-size: 0.75rem; padding: 0.5rem 1rem;">📋 Paste</button><button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">📁 Upload File</button><input type="file" id="fileInput" accept=".txt,.md,.json,.yml,.yaml,.xml" style="display: none;" aria-label="File input">';
+                inputInfo.innerHTML = '<span style="flex: 1;">Paste your snippet below.</span><button class="btn btn-secondary" id="pasteBtn" aria-label="Paste from clipboard" style="font-size: 0.75rem; padding: 0.5rem 1rem;">📋 Paste</button><button class="btn btn-secondary" id="uploadBtn" aria-label="Upload file" style="font-size: 0.75rem; padding: 0.5rem 1rem;">📁 Upload File</button><input type="file" id="fileInput" accept=".txt,.md,.json" style="display: none;" aria-label="File input">';
                 metadataSection.style.display = 'block';
                 downloadBtn.style.display = 'inline-block';
 
@@ -1092,12 +1092,12 @@
             if (!file) return;
 
             // Validate file type
-            const validExtensions = ['.txt', '.md', '.json', '.yml', '.yaml', '.xml'];
+            const validExtensions = ['.txt', '.md', '.json'];
             const fileName = file.name.toLowerCase();
             const isValid = validExtensions.some(ext => fileName.endsWith(ext));
 
             if (!isValid) {
-                showToast(`Invalid file type "${file.name}". Please upload: .txt, .md, .json, .yml, .yaml, or .xml files.`, 'error', 5000);
+                showToast(`Invalid file type "${file.name}". Please upload: .txt, .md, or .json files.`, 'error', 5000);
                 e.target.value = '';
                 return;
             }
@@ -1197,12 +1197,12 @@
                 const file = files[0];
 
                 // Validate file type
-                const validExtensions = ['.txt', '.md', '.json', '.yml', '.yaml', '.xml'];
+                const validExtensions = ['.txt', '.md', '.json'];
                 const fileName = file.name.toLowerCase();
                 const isValid = validExtensions.some(ext => fileName.endsWith(ext));
 
                 if (!isValid) {
-                    showToast(`Invalid file type "${file.name}". Please upload: .txt, .md, .json, .yml, .yaml, or .xml files.`, 'error', 5000);
+                    showToast(`Invalid file type "${file.name}". Please upload: .txt, .md, or .json files.`, 'error', 5000);
                     return;
                 }
 

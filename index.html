@@ -1351,7 +1351,8 @@
                 // Generate a proper unique ID
                 const id = crypto.randomUUID ? crypto.randomUUID() : `snippet-${Date.now()}`;
 
-                const result = {
+                // Always wrap in array for consistency with snippet manager
+                const result = [{
                     id: id,
                     title: title,
                     content: snippetContent,
@@ -1362,7 +1363,7 @@
                     pinned: pinned,
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
-                };
+                }];
 
                 const json = JSON.stringify(result, null, 2);
                 outputArea.innerHTML = syntaxHighlightJson(json);

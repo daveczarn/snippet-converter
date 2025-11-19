@@ -1311,8 +1311,9 @@
                         );
 
                     if (isValidSnippetJson) {
-                        // Input is already valid snippet JSON, just display it
-                        outputArea.innerHTML = syntaxHighlightJson(JSON.stringify(parsed, null, 2));
+                        // Input is already valid snippet JSON, ensure it's wrapped in array
+                        const outputData = Array.isArray(parsed) ? parsed : [parsed];
+                        outputArea.innerHTML = syntaxHighlightJson(JSON.stringify(outputData, null, 2));
                         showToast('This is already valid snippet JSON', 'info', 3000);
                         return;
                     }

@@ -1270,6 +1270,29 @@
 
         function convertTextToJson(input) {
             try {
+                // First, check if input is already valid snippet JSON
+                try {
+                    const parsed = JSON.parse(input);
+                    const snippetsToCheck = Array.isArray(parsed) ? parsed : [parsed];
+
+                    // Check if it's valid snippet JSON (has snippet properties)
+                    const isValidSnippetJson = snippetsToCheck.length > 0 &&
+                        snippetsToCheck.every(s =>
+                            s &&
+                            typeof s === 'object' &&
+                            (s.hasOwnProperty('id') || s.hasOwnProperty('content') || s.hasOwnProperty('title'))
+                        );
+
+                    if (isValidSnippetJson) {
+                        // Input is already valid snippet JSON, just display it
+                        outputArea.innerHTML = syntaxHighlightJson(JSON.stringify(parsed, null, 2));
+                        showToast('This is already valid snippet JSON', 'info', 3000);
+                        return;
+                    }
+                } catch (e) {
+                    // Not valid JSON, continue with normal text-to-JSON conversion
+                }
+
                 const snippets = input.split('---').map(s => s.trim()).filter(s => s);
 
                 if (snippets.length === 0) {
